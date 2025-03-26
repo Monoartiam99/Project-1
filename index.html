@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Portfolio</title>
+    <style>
+        :root {
+            --background-color: linear-gradient(135deg, #1e3c72, #2a5298);
+            --text-color: #fff;
+            --header-bg: rgba(225, 255, 0, 0.8);
+            --footer-bg: #1e3c72;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #333;
+            --footer-bg: #333;
+            --card-bg: #1e1e1e;
+        }
+
+        body.light-theme {
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --header-bg: #fff;
+            --footer-bg: #ddd;
+            --card-bg: #fff;
+        }
+
+        body.yellow-theme {
+            --background-color: #fff8dc;
+            --text-color: #333;
+            --header-bg: #ffeb3b;
+            --footer-bg: #ffeb3b;
+            --card-bg: #fffde7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+             background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--header-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #000000;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+            background-color: #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr 2fr;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        p, li {
+            font-size: 1.1rem;
+        }
+
+        .skills ul {
+            list-style: none;
+        }
+
+        .skills li {
+            background: #ffd700;
+            color: #1e3c72;
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .profile img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Project Section */
+        .project-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .project-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: calc(33.333% - 20px);
+            cursor: pointer;
+        }
+
+        .project-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .project-item h3 {
+            padding: 10px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            margin: 0;
+        }
+
+        .project-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Chat Bubble */
+        .chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-bubble::before {
+            content: "💬";
+            font-size: 1.2rem;
+        }
+
+        /* Chatbot Overlay */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-overlay {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .chatbot-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background-color: #f1f3f5;
+        }
+
+        .chatbot-input button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .chatbot-input button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            p, li {
+                font-size: 1rem;
+            }
+
+            .chat-bubble {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .project-item {
+                width: 100%;
+            }
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 10px;
+            max-width: 1200px; /* Matches the header width */
+            margin-left: auto; /* Centers the footer */
+            margin-right: auto; /* Centers the footer */
+          
+        }
+
+        .dark-theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .dark-theme-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+        }
+       </style>
+</head>
+<body>
+    <header>
+        <div>My Portfolio</div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+    <div class="container">
+        <!-- Profile Section -->
+        <div class="section profile" id="home" style="grid-row: span 2;">
+            <img src="mono1.jpg" alt="Profile Picture">
+            <h2>Profile</h2>
+            <!-- <p><strong>Name:</strong> Monojit Nandy</p>
+            <p><strong>Email:</strong> nandymonojittalks@gmail.com</p>
+            <p><strong>Contact:</strong> 7908729220</p>
+            <p><strong>Location:</strong> Kolkata</p> -->
+           
+            <p>
+                Hi, I'm Monojit! Web Developer with 5+ yaers of experience,
+                I'm a passionate individual who loves 
+                [your interests]. I strive to create impactful work and 
+                enjoy exploring new challenges.
+            </p>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="section skills">
+            <h2>My Skills</h2>
+            <ul>
+                <li>HTML & CSS</li>
+                <li>JavaScript</li>
+                <li>Responsive Design</li>
+                <li>Problem Solving</li>
+            </ul>
+        </div>
+
+        <!-- Projects Section -->
+    <div class="section projects" id="projects">
+        <h2>My Projects</h2>
+        <div class="project-container">
+            <div class="project-item">
+                <img src="mono1.jpg" alt="Portfolio Website" style="object-fit: cover; height: 200px;">
+                <h3>Portfolio Website</h3>
+            </div>
+            <div class="project-item">
+                <img src="E1.avif" alt="E-Commerce Platform" style="object-fit: cover; height: 200px;">
+                <h3>E-Commerce Platform</h3>
+            </div>
+            <div class="project-item">
+                <img src="E3.jpg" alt="Blog Application" style="object-fit: cover; height: 200px;">
+                <h3>Blog Application</h3>
+            </div>
+            <div class="project-item">
+                <img src="E4.jpeg" alt="Task Management Tool" style="object-fit: cover; height: 200px;">
+                <h3>Task Management Tool</h3>
+            </div>
+            <div class="project-item">
+                <img src="E5.jpeg" alt="Weather App" style="object-fit: cover; height: 200px;">
+                <h3>Weather App</h3>
+            </div>
+            <div class="project-item">
+                <img src="E6.jpeg" alt="Chat Application" style="object-fit: cover; height: 200px;">
+                <h3>Chat Application</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Button -->
+    <button class="chatbot-btn" onclick="toggleChatbot()">💬</button>
+
+    <!-- Chatbot Overlay -->
+    <div class="chatbot-overlay" id="chatbotOverlay">
+        <div class="chatbot-header">Chat with Monojit!</div>
+        <div class="chatbot-messages" id="chatBody"></div>
+        <div class="chatbot-input">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Light/Dark Theme Toggle Button -->
+    <button class="theme-btn" onclick="toggleTheme()">🌗</button>
+
+    <script>
+        const chatbotOverlay = document.getElementById('chatbotOverlay');
+        const chatBody = document.getElementById('chatBody');
+        const userInput = document.getElementById('userInput');
+        const apiKey = 'AIzaSyBP4DXuEojIZMYM2h5dA_lkyPPz-0KOKB0';
+        const myFullName = 'John Doe';
+        const myDescription = 'I’m a friendly guy who loves tech and helping people out!';
+
+        function toggleChatbot() {
+            if (chatbotOverlay.style.display === 'none' || chatbotOverlay.style.display === '') {
+                chatbotOverlay.style.display = 'flex';
+                showInitialMessage();
+            } else {
+                chatbotOverlay.style.display = 'none';
+            }
+        }
+
+        function showInitialMessage() {
+            chatBody.innerHTML = `<div class="message ai-message">Hi, I am ${myFullName}, what do you want to know about me?</div>`;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Display user message
+            chatBody.innerHTML += `<div class="message user-message">${message}</div>`;
+            userInput.value = '';
+
+            // Prepare API request based on your curl command
+            const requestBody = {
+                contents: [{
+                    parts: [{
+                        text: `User_message:${message}. Reply naturally to the usermessage and if required then answer based on: ${myDescription} or just simply give friendly reply and reply in a way that John Doe is himself talking reply in short sentences`
+                    }]
+                }]
+            };
+
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody)
+                    }
+                );
+
+                if (!response.ok) throw new Error('API request failed');
+
+                const data = await response.json();
+                const reply = data.candidates[0].content.parts[0].text; // Adjust based on actual API response structure
+                chatBody.innerHTML += `<div class="message ai-message">${reply}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight; // Scroll to bottom
+            } catch (error) {
+                chatBody.innerHTML += `<div class="message ai-message">Oops, something went wrong! Try again.</div>`;
+                console.error('Error:', error);
+            }
+        }
+
+        // Send message on Enter key press
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function toggleDarkTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+
+        let currentTheme = 'default'; // Default theme
+
+        function toggleTheme() {
+            const body = document.body;
+
+            // Remove existing theme classes
+            body.classList.remove('dark-theme', 'light-theme', 'yellow-theme','red-theme');
+
+            // Toggle between themes
+            if (currentTheme === 'default') {
+                body.classList.add('dark-theme');
+                currentTheme = 'dark';
+            } else if (currentTheme === 'dark') {
+                body.classList.add('light-theme');
+                currentTheme = 'light';
+            } else if (currentTheme === 'light') {
+                body.classList.add('yellow-theme');
+                currentTheme = 'yellow';
+                }   else if (currentTheme === 'yellow') {
+                body.classList.add('red-theme');
+                currentTheme = 'red';
+            } else {
+                currentTheme = 'default';
+            }
+        }
+    </script>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Monojit Nandy. All rights reserved.</p>
+        <p>Designed with ❤️ by Monojit Nandy</p>
+        <p>📧 Email: nandymonojittalks@gmail.com</p>
+        <p>📍 Location: Kolkata, India</p>
+        <p>📞 Phone: 7908729220</p>
+    </footer>
+</body>
+</html>
